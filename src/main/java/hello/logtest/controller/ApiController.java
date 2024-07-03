@@ -27,7 +27,6 @@ public class ApiController {
     private static final Logger logger = LoggerFactory.getLogger(ApiController.class);
     private final GradingService gradingService;
 
-    
     @PostMapping("/submit")
     public ResponseEntity<String> receiveSolution(@RequestBody SolutionRequest request) {
         String answerCode = request.getAnswerCode();
