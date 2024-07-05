@@ -1,18 +1,21 @@
 pipeline {
     agent any
     stages {
+        stage('Prepare Environment') {
+            steps {
+                sh 'chmod +x ./gradlew'
+            }
+        }
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: "https://github.com/hennible0612/Docker_Jenkins_CI-CD"
             }
         }
-
         stage('Build Project') {
             steps {
                 sh './gradlew clean build'
             }
         }
-
         stage('Docker Login') {
             steps {
                 sh 'echo $DockerHubIdPwd_PASSWORD | docker login -u $DockerHubIdPwd_USERNAME --password-stdin'
