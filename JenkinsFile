@@ -1,15 +1,16 @@
 pipeline {
     agent any
     stages {
-    
-        stage('Prepare Environment') {
-            steps {
-                sh 'chmod +x ./gradlew'
-            }
-        }
+
+
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: "https://github.com/hennible0612/Docker_Jenkins_CI-CD"
+            }
+        }
+        stage('Prepare Environment') {
+            steps {
+                sh 'chmod +x ./gradlew'
             }
         }
         stage('Build Project') {
