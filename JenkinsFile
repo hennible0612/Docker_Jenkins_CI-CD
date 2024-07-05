@@ -1,6 +1,7 @@
 pipeline {
     agent any
     stages {
+    
         stage('Prepare Environment') {
             steps {
                 sh 'chmod +x ./gradlew'
