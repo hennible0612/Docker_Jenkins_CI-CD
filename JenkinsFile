@@ -20,7 +20,7 @@ pipeline {
         }
         stage('Docker Login') {
             steps {
-                sh 'echo @Sungwooh3756 | docker login -u sungwoo166@gmail.com --password-stdin'
+                sh 'echo $DockerHubIdPwd_PASSWORD | docker login -u $DockerHubIdPwd_USERNAME --password-stdin'
             }
         }
 
