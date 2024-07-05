@@ -6,5 +6,31 @@ pipeline {
                 git branch: 'main', url: "https://github.com/hennible0612/Docker_Jenkins_CI-CD"
             }
         }
+
+        stage('Build Project') {
+            steps {
+                sh './gradlew clean build'
+            }
+        }
+
+        stage('Docker Login') {
+            steps {
+                sh 'echo $DockerHubIdPwd_PASSWORD | docker login -u $DockerHubIdPwd_USERNAME --password-stdin'
+            }
+        }
+
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t logtest-app .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push hennible0612/jenkins:tagname'
+            }
+        }
     }
+
+
 }
