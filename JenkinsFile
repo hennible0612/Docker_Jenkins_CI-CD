@@ -1,11 +1,6 @@
 pipeline {
     agent any
 
-    environment {
-        // 환경 변수 설정은 pipeline 블록 직접 아래에 위치해야 합니다.
-        CRED_EXAMPLE = credentials('docker-credentials')
-    }
-
     stages {
         stage('Clone Repository') {
             steps {
@@ -27,7 +22,6 @@ pipeline {
 
         stage('Docker Login') {
             steps {
-                // withCredentials는 steps 블록 안에 포함되어야 합니다.
                 withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PWD', usernameVariable: 'DOCKER_USR')]) {
                     sh 'echo $DOCKER_PWD | docker login -u $DOCKER_USR --password-stdin'
                 }
