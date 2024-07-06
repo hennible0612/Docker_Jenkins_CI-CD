@@ -1,9 +1,39 @@
 pipeline {
     agent any
     stages {
+
+        environment {
+            CRED_EXAMPLE = credentials('docker-credentials')
+        }
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: "https://github.com/hennible0612/Docker_Jenkins_CI-CD"
+            }
+        }
+        stage('Prepare Environment') {
+            steps {
+                sh 'chmod +x ./gradlew'
+            }
+        }
+        stage('Build Project') {
+            steps {
+                sh './gradlew clean build'
+            }
+        }
+        stage('Docker Login') {
+            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PWD', usernameVariable: 'DOCKER_USR')]) {
+                sh 'echo $DOCKER_PWD | docker login -u $DOCKER_USR --password-stdin'
+            }
+        }
+        stage('Build Docker Image') {
+            steps {
+                sh 'docker build -t logtest-app .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                sh 'docker push sungwoo166/jenkins:tagname'
             }
         }
     }
