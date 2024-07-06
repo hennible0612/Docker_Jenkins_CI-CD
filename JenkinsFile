@@ -2,6 +2,19 @@ pipeline {
     agent any
 
     stages {
+        stage('Check Docker') {
+            steps {
+                script {
+                    try {
+                        sh 'docker --version'
+                    } catch(Exception e) {
+                        echo 'ERROR: Docker is not installed or not found in PATH'
+                        echo "Caught: ${e}"
+                    }
+                }
+            }
+        }
+
         stage('Clone Repository') {
             steps {
                 git branch: 'main', url: "https://github.com/hennible0612/Docker_Jenkins_CI-CD"
