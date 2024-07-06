@@ -1,7 +1,6 @@
 pipeline {
     agent any
     stages {
-    
         environment {
             CRED_EXAMPLE = credentials('docker-credentials')
         }
@@ -21,8 +20,8 @@ pipeline {
             }
         }
         stage('Docker Login') {
-            steps {
-                sh 'echo $CRED_EXAMPLE_USR | docker login -u $CRED_EXAMPLE_PSW --password-stdin'
+            withCredentials([usernamePassword(credentialsId: 'docker-hub', passwordVariable: 'DOCKER_PWD', usernameVariable: 'DOCKER_USR')]) {
+                sh 'echo $DOCKER_PWD | docker login -u $DOCKER_USR --password-stdin'
             }
         }
 
