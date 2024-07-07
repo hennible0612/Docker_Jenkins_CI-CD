@@ -1,7 +1,13 @@
 pipeline {
     agent any
+
+    environment {
+        // 환경 변수로 태그 설정
+        DOCKER_TAG = "latest" // 또는 Jenkins 변수를 사용하여 동적으로 설정 가능, 예: ${BUILD_NUMBER}
+        REPO_NAME = "sungwoo166/jenkins"
+    }
+
     stages {
-    
         stage('Check Docker') {
             steps {
                 script {
@@ -43,13 +49,13 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                sh 'docker build -t logtest-app .'
+                sh "docker build -t ${REPO_NAME}:${DOCKER_TAG} ."
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker push sungwoo166/jenkins:tagname'
+                sh "docker push ${REPO_NAME}:${DOCKER_TAG}"
             }
         }
     }
