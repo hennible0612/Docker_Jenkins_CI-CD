@@ -58,5 +58,9 @@ pipeline {
                 sh "docker push ${REPO_NAME}:${DOCKER_TAG}"
             }
         }
+        
+        stage('Docker Run') {
+
+        }
     }
 }
