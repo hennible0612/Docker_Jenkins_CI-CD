@@ -68,9 +68,9 @@ pipeline {
             steps {
                 echo 'Pull Docker Image & Docker Image Run'
                 sshagent (credentials: ['ssh']) { // Credential ID 사용
-                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'docker pull ${IMAGE_NAME}'"
-                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'docker ps -q --filter name=${CONTAINER_NAME} | grep -q . && docker rm -f \$(docker ps -aq --filter name=${CONTAINER_NAME})'"
-                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}'"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker pull ${IMAGE_NAME}'"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker ps -q --filter name=${CONTAINER_NAME} | grep -q . && docker rm -f \$(docker ps -aq --filter name=${CONTAINER_NAME})'"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}'"
                 }
             }
         }
