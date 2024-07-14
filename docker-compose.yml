@@ -6,7 +6,7 @@ services:
       - "80:80"    # 외부 포트 80을 컨테이너의 80번 포트로 매핑
       - "443:443"  # HTTPS 연결용 ㅅㅏ실 지금은 필요없음
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf  # Nginx 설정 파일 마운트
+      - ./nginx.conf:/etc/nginx/nginx.conf  # Nginx 설정 파일 마운트
     depends_on:
       - webapp
       - springboot
