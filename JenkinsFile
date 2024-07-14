@@ -64,17 +64,34 @@ pipeline {
             }
         }
 
-        stage('Docker Run') {
+//         stage('Docker Run') {
+//             steps {
+//                 echo 'Pull Docker Image & Docker Image Run'
+//                 sshagent (credentials: ['ssh']) {
+//                     sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker pull ${IMAGE_NAME}'"
+//
+//                     sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker ps -q --filter name=${CONTAINER_NAME} | grep -q . && sudo docker rm -f \$(sudo docker ps -aq --filter name=${CONTAINER_NAME})'"
+//                     sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}'"
+//                 }
+//             }
+//         }
+        stage('Deploy with Docker Compose') {
             steps {
-                echo 'Pull Docker Image & Docker Image Run'
+                echo 'Deploy services using Docker Compose'
                 sshagent (credentials: ['ssh']) {
-                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker pull ${IMAGE_NAME}'"
+                    // 원격 서버에 Docker Compose 파일 복사
+                    sh "scp -o StrictHostKeyChecking=no docker-compose.yml ${REMOTE_USER}@${REMOTE_HOST}:~/"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo ls -al'"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo pwd'"
 
-                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker ps -q --filter name=${CONTAINER_NAME} | grep -q . && sudo docker rm -f \$(sudo docker ps -aq --filter name=${CONTAINER_NAME})'"
-                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker run -d --name ${CONTAINER_NAME} -p 8080:8080 ${IMAGE_NAME}'"
+                    // 원격 서버에서 Docker Compose를 사용하여 서비스 배포
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker-compose pull'"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker-compose down'"
+                    sh "ssh -o StrictHostKeyChecking=no ${REMOTE_USER}@${REMOTE_HOST} 'sudo docker-compose up -d'"
                 }
             }
         }
+
 
     }
 }
